@@ -42,29 +42,6 @@ if (document.location.href.includes("vote_list.html")){
   }
   $("#voteIndex").val(nowpage);
  },
-
- /*
- createVoteRoom: async function() {
-	//alert(candiNum-1);
-   const { addVoteRoom, howManyRooms } = this.voting.methods;
-   
-   var candies = candiNum-1;
-   var candidateList = new Array();
-   for (var i = 0; i < candies; i++) {
-     candidateList[i] = this.web3.utils.asciiToHex($("#candi"+(i+1)).val());
-   }
-	
-   let roomName = $("#title").val();
-   roomName = this.web3.utils.asciiToHex(roomName);  
-   
-   let voteDate = "Today!!!";
-   voteDate = this.web3.utils.asciiToHex(voteDate);
-   //var check = await addVoteRoom(roomName,candidateList,voteDate).call();
-   //alert("??");
-   var check = await addVoteRoom(roomName,candidateList,voteDate).send({gas: 350000, from: this.account});
-   //alert("??");
-  },
- */
  
   createVoteRoom: async function() {
 	var today = new Date();
@@ -88,11 +65,12 @@ if (document.location.href.includes("vote_list.html")){
      candidateList[i] = this.web3.utils.asciiToHex($("#candi"+(i+1)).val());
    }
 
+   let max = $("#maxVote").val();
    let roomName = $("#title").val();
    roomName = this.web3.utils.asciiToHex(roomName);  
    voteDate = this.web3.utils.asciiToHex(voteDate);
    //var check = await addVoteRoom(roomName,candidateList,voteDate).call();
-   var check = await addVoteRoom(roomName,candidateList,voteDate,0).send({gas: 320000, from: this.account});
+   var check = await addVoteRoom(roomName,candidateList,voteDate,max,0).send({gas: 320000, from: this.account});
   },
   
  loadRoomData: async function() {
@@ -100,8 +78,8 @@ if (document.location.href.includes("vote_list.html")){
    let number = nowpage;
    //alert("제목"+number);
    $("#loadRoomNum").val("");
-   var roomName = await getRoomName(number,0).call();
-   var voteDate = await getVoteDate(number,0).call();
+   var roomName = await getRoomName(number,0,0).call();
+   var voteDate = await getVoteDate(number,0,0).call();
  
    $("#roomName").html(this.web3.utils.hexToAscii(roomName));
    $("#voteDate").html(this.web3.utils.hexToAscii(voteDate));
@@ -113,7 +91,7 @@ if (document.location.href.includes("vote_list.html")){
    const { getCandidateList, totalVotesFor } = this.voting.methods;
    let number = nowpage;
  
-   var candidateList = await getCandidateList(number,0).call();
+   var candidateList = await getCandidateList(number,0,0).call();
    
    for (var i = 1; i <= candidateList.length; i++) {
 	 var add ='<tr><td id = "candidate-'+i+'"></td><td><input type="radio" name="pickme" value="'+i+'"></td><td id="totalVotes-'+i+'"></td></tr>';
@@ -123,6 +101,7 @@ if (document.location.href.includes("vote_list.html")){
      var count = await totalVotesFor(number,candidateList[i-1],0).call();
      $("#totalVotes-" + i).html(count);
    }
+   this.maxCheck()
  },
 
 loadCandidatesAndVotes: async function() {
@@ -131,7 +110,7 @@ loadCandidatesAndVotes: async function() {
    let number = nowpage;
  
    
-   var candidateList = await getCandidateList(number,0).call();
+   var candidateList = await getCandidateList(number,0,0).call();
    
    for (var i = 1; i <= candidateList.length; i++) {
      var name = this.web3.utils.hexToAscii(candidateList[i-1]);
@@ -144,10 +123,13 @@ loadCandidatesAndVotes: async function() {
  voteForCandidate: async function() {
   
   const { totalVotesFor, voteForCandidate, votedCheck } = this.voting.methods;
+  //let temp = await votedCheck(nowpage,0,0,0).call();
+  //alert(temp);
   var radioVal = $('input[name="pickme"]:checked').val();
   await voteForCandidate(nowpage,radioVal-1,0).send({gas: 600000, from: this.account});
 
   this.loadCandidatesAndVotes();
+  this.maxCheck();
  },
  
  loadVoteList: async function() {
@@ -161,10 +143,10 @@ loadCandidatesAndVotes: async function() {
 		 //alert(i);
 		var add = '<tr><th id = "num-'+i+'">'+i+'</th><th><a onclick = App.toVoting('+i+') id = "title-'+i+'" value='+i+'></a></th><th id = "date-'+i+'"></th></tr>';
 		$('#votlist > tbody:last').append(add);	
-		var roomName = await getRoomName(i,0).call();
+		var roomName = await getRoomName(i,0,0).call();
 		roomName = this.web3.utils.hexToAscii(roomName);
 		$("#title-" + i).html(roomName);
-		var voteDate = await getVoteDate(i,0).call();
+		var voteDate = await getVoteDate(i,0,0).call();
 		$("#date-" + i).html(this.web3.utils.hexToAscii(voteDate));
 			//alert(roomName);
 	 }
@@ -177,7 +159,29 @@ loadCandidatesAndVotes: async function() {
 	 location.href = "vote1.html";
  },
  
-
+ maxCheck: async function(){
+	 
+	 const { getCandidateList, maxCheck,isVoteEnd,totalVotesFor } = this.voting.methods;
+	 var tmp = await maxCheck(nowpage,0,0,0,0).call();
+	 //alert(tmp);
+	 var xx = await isVoteEnd(nowpage,0,0,0).call();
+	 //alert(xx);
+	 var candidateList = await getCandidateList(nowpage,0,0).call();
+	 var sum = Number(0);
+     for (var i = 1; i <= candidateList.length; i++) {
+     var count = await totalVotesFor(nowpage,candidateList[i-1],0).call();
+     sum += Number(count);
+     }
+	 if (tmp <= sum){
+		 this.voteEnd();
+	 }
+     
+ },
+ 
+ voteEnd: async function(){
+	//$("#candidate").html('투표가 마감되었습니다.'); 
+	$("#candidate").replaceWith('<p>투표가 마감되었습니다.</p>');
+ }
 };
 
 window.App = App;
