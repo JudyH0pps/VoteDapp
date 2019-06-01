@@ -200,6 +200,7 @@ loadCandidatesAndVotes: async function() {
      var count = await totalVotesFor(nowpage,candidateList[i-1],0).call();
      sum += Number(count);
      }
+	 $("#left").html(tmp - sum);
 	 if (tmp <= sum){
 		 await voteEnd(nowpage,0,0,0);
 		 //alert("??");
