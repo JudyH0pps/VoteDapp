@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Blockchain Voting</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<style tyle="text/css">
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+		}
+		#wrapper {
+			position: relative;
+			min-height: 100%;
+		}
+		#header {
+			line-height: 70px;
+			font-size: 25px;
+			height: 70px;
+			background: #ccc;
+			text-align: center;
+			vertical-align: middle;
+		}
+		#container {
+			padding: 20px;
+		}
+		#footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			height: 70px;
+			background: #ccc;
+		}
+		#newvot {
+			width: 90%;
+			border: 1px solid #444444;
+			border-collapse: collapse;
+		}
+		td,
+		tr {
+			border: 1px solid #444444;
+			height: 25px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="header">새 투표 만들기</div>
+		<div id="container">
+			<br>
+			
+			<center>
+				<form id = "new">
+				<table id="newvot">
+					<tbody>
+						<tr>
+							<td>투표 제목</td>
+							<td><input type="text" id = "title" style = "width:95%" value="title"></td>
+						</tr>
+						<tr>
+							<td>후보1</td>
+							<td><input type="text" id = "candi1" style = "width:95%" value="candi1"></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="filebox">
+									<center><label for="ex_file1">후보1 사진 첨부</label><br><input type="file" id="ex_file1"></center>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>후보2</td>
+							<td><input type="text" id = "candi2" style = "width:95%" value="candi2"></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="filebox">
+									<center><label for="ex_file2">후보2 사진 첨부</label><br><input type="file" id="ex_file2"></center>
+								</div>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+				</form>
+				<br>
+				<button id='btn-add-row'>후보 추가</button>
+				<button id='btn-delete-row'>후보 삭제</button>
+			</center>
+			<script>
+				var candiNum = 3;
+				var maxNum = 4;
+				var minNum = 2;
+				$('#btn-add-row').click(function() {
+					if (candiNum >= maxNum + 1) {
+						alert("후보 수는 최대 "+maxNum+"명까지입니다.");
+					} else {
+						var add = '<tr><td>후보' + (candiNum) + '</td><td><input type = "text" id = candi'+(candiNum)+' style = "width:95%"></td></tr><tr><td colspan = "2"><div class="filebox"><center><label for="ex_file3">후보' + (candiNum) +
+							' 사진 첨부</label><br><input type="file" id="ex_file3"></center></div></td></tr>';
+						$('#newvot > tbody:last').append(add);
+						candiNum += 1;
+					}
+				});
+				$('#btn-delete-row').click(function() {
+					if (candiNum <= minNum + 1) {
+						alert("후보 수는 "+minNum+"명 이상이어야 합니다.");
+					} else {
+						$('#newvot > tbody:last > tr:last').remove();
+						$('#newvot > tbody:last > tr:last').remove();
+						candiNum -= 1;
+					}
+				});
+				
+			</script>
+			<br>
+			<center><input type="submit" value="새 투표 작성" id = "sendNew"></center>
+			<script>
+				$('#sendNew').click(function(){
+
+							App.createVoteRoom();
+				});
+			</script>
+			
+		</div>
+		<div id="footer">
+			<br>
+			<center>
+				<table id="downtable">
+					<td class="downbar"><input type="button" value="홈 화면" onclick="location.href='index.html'"></td>
+					<td class="downbar"><input type="button" value="투표 리스트" onclick="location.href='vote_list.html'"></td>
+					<td class="downbar"><input type="button" value="새 투표" onclick="location.href='newvote.html'"></td>
+				</table>
+			</center>
+		</div>
+		<script src="js/jquery.min.js"></script>
+		<script src="index.js"></script>
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+</html>

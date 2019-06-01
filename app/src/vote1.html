@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Blockchain Voting</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<style tyle="text/css">
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+		}
+		#wrapper {
+			position: relative;
+			min-height: 100%;
+		}
+		#roomName {
+			line-height: 70px;
+			font-size: 25px;
+			height: 70px;
+			background: #ccc;
+			text-align: center;
+			vertical-align: middle;
+		}
+		#container {
+			padding: 20px;
+		}
+		#footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			height: 70px;
+			background: #ccc;
+		}
+	</style>
+</head>
+<input type = "hidden" id = "voteIndex">
+<script>
+	$("#voteIndex").val(nowpage);
+</script>
+<body>
+	<div id="wrapper">
+		<div id="roomName">[Title]</div>
+		<div id="container">
+			<table class="table table-bordered" id = "candiList">
+				<thead>
+					<tr>
+						<th>후보자</th>
+						<th>후보 선택</th>
+						<th>투표 수</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div>
+				<center>
+					<button type="button" id="candidate" value ="" class="btn btn-primary">투표</button>
+					<br><br>
+					<!--
+					<input type = "text" id="voteNum">
+					<button type="button" id="voteMove" value ="" class="btn btn-primary">투표이동</button>
+					-->
+				 <script>
+		
+				$('#candidate').click(function () {
+					 // getter
+							 App.voteForCandidate();
+				 });
+				 /*
+				 $('#voteMove').click(function(){
+							//alert("fdsfadf");
+							var temp = $("#voteNum").val();
+							$("#voteIndex").val(temp);
+							App.loadRoomData();
+							App.loadCandidatesAndVotes();
+				});
+				*/
+				 </script>
+				
+				</center>
+			</div>
+		</div>
+		<div id="footer">
+			<br>
+			<center>
+				<table id="downtable">
+					<td class="downbar"><input type="button" value="홈 화면" onclick="location.href='index.html'"></td>
+					<td class="downbar"><input type="button" value="투표 리스트" onclick="location.href='vote_list.html'"></td>
+					<td class="downbar"><input type="button" value="새 투표" onclick="location.href='newvote.html'"></td>
+				</table>
+			</center>
+		</div>
+		<script src="js/jquery.min.js"></script>
+		<script src="index.js"></script>
+		<script src="js/jquery.scrolly.min.js"></script>
+		<script src="js/jquery.scrollex.min.js"></script>
+		<script src="js/browser.min.js"></script>
+		<script src="js/breakpoints.min.js"></script>
+		<script src="js/util.js"></script>
+		<script src="js/main.js"></script>
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Blockchain Voting</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;">
+	<style tyle="text/css">
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+		}
+
+		#wrapper {
+			position: relative;
+			min-height: 100%;
+		}
+
+		#header {
+			line-height: 70px;
+			font-size: 25px;
+			height: 70px;
+			background: #ccc;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		#container {
+			padding: 20px;
+		}
+
+		#footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			height: 70px;
+			background: #ccc;
+		}
+
+		#votlist{
+			width: 90%;
+	border: 1px solid #444444;
+	border-collapse: collapse;
+		}
+		th, td {
+	 border: 1px solid #444444;
+	 height: 25px;
+	 }
+	</style>
+</head>
+<input type = "hidden" id = "howManyVote">
+<body>
+	<div id="wrapper">
+		<div id="header">현재 투표 목록</div>
+		<div id="container">
+			<center>
+				<br>
+			<table id = "votlist">
+				<thread>
+					<tr>
+						<th width = 20%>번호</th>
+						<th width = 50%>투표 제목</th>
+						<th width = 30%>등록일</th>
+					</tr>
+				</thread>
+				<tbody>
+		
+				</tbody>
+			</table>
+
+		</center>
+		</div>
+		<div id="footer">
+			<br>
+			<center>
+			<table id="downtable">
+				<td class="downbar"><input type="button" value="홈 화면" onclick="location.href='index.html'"></td>
+				<td class="downbar"><input type="button" value="투표 리스트" onclick="location.href='vote_list.html'"></td>
+				<td class="downbar"><input type="button" value="새 투표" onclick="location.href='newvote.html'"></td>
+			</table>
+		</center></div>
+		<script src="js/jquery.min.js"></script>
+		<script src="index.js"></script>
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+</body>
+</html>
