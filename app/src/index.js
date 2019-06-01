@@ -48,14 +48,26 @@ if (document.location.href.includes("vote_list.html")){
 	var dd = today.getDate();
 	var mm = today.getMonth()+1; //January is 0!
 	var yyyy = today.getYear();
+	var hour = today.getHours();
+	var minute = today.getMinutes();
+	var sec = today.getSeconds();
 	if(dd<10) {
 		dd='0'+dd
 	} 
 
 	if(mm<10) {
 		mm='0'+mm
-	} 
-   let voteDate = (yyyy+"-"+mm+"-"+dd).substring(1,9);
+	}
+	if(hour<10) {
+		hour = '0'+hour;
+	}
+	if(minute<10){
+		minute = '0'+minute;
+	}
+	if(sec<10){
+		sec = '0'+sec;
+	}
+   let voteDate = (yyyy+"-"+mm+"-"+dd+","+hour+":"+minute+":"+sec).substring(1,20);
    //alert(voteDate);
    const { addVoteRoom, howManyRooms } = this.voting.methods;
    //$("#test1").html("State 1 : createVoteRoom start.");
@@ -134,7 +146,7 @@ loadCandidatesAndVotes: async function() {
  
  loadVoteList: async function() {
 	 //alert("FAFSAS");
-	 const { getRoomName, getVoteDate, roomCount, howManyRooms } = this.voting.methods;
+	 const {totalVotesFor, getCandidateList, maxCheck, isVoteEnd, getRoomName, getVoteDate, roomCount, howManyRooms } = this.voting.methods;
 	 //alert("votes");
 	 var votes = await howManyRooms(1).call();
 	 //alert(votes);
@@ -142,12 +154,30 @@ loadCandidatesAndVotes: async function() {
 	 for (var i=1; i<=votes-1; i++){
 		 //alert(i);
 		var add = '<tr><th id = "num-'+i+'">'+i+'</th><th><a onclick = App.toVoting('+i+') id = "title-'+i+'" value='+i+'></a></th><th id = "date-'+i+'"></th></tr>';
-		$('#votlist > tbody:last').append(add);	
+		$('#votlist > tbody:last').append(add);
 		var roomName = await getRoomName(i,0,0).call();
 		roomName = this.web3.utils.hexToAscii(roomName);
 		$("#title-" + i).html(roomName);
+		
+		var tmp = await maxCheck(i,0,0,0,0).call();
+	 //alert(tmp);
+	 var candidateList = await getCandidateList(i,0,0).call();
+	 var sum = Number(0);
+	 
+     for (var j = 1; j <= candidateList.length; j++) {
+     var count = await totalVotesFor(i,candidateList[j-1],0).call();
+     sum += Number(count);
+     }
+	 //alert(sum);
+	 if (tmp <= sum){
+		 $("#title-" + i).append("(마감)");
+	 }
+		
+		var tmp = await isVoteEnd(nowpage,0,0,0).call();
+		//alert(i +" " +tmp);
 		var voteDate = await getVoteDate(i,0,0).call();
-		$("#date-" + i).html(this.web3.utils.hexToAscii(voteDate));
+		voteDate = this.web3.utils.hexToAscii(voteDate)
+		$("#date-" + i).html(voteDate.substring(0,8)+'<br>'+voteDate.substring(9,20));
 			//alert(roomName);
 	 }
  },
@@ -161,11 +191,9 @@ loadCandidatesAndVotes: async function() {
  
  maxCheck: async function(){
 	 
-	 const { getCandidateList, maxCheck,isVoteEnd,totalVotesFor } = this.voting.methods;
+	 const { voteEnd,getCandidateList, maxCheck,isVoteEnd,totalVotesFor } = this.voting.methods;
 	 var tmp = await maxCheck(nowpage,0,0,0,0).call();
 	 //alert(tmp);
-	 var xx = await isVoteEnd(nowpage,0,0,0).call();
-	 //alert(xx);
 	 var candidateList = await getCandidateList(nowpage,0,0).call();
 	 var sum = Number(0);
      for (var i = 1; i <= candidateList.length; i++) {
@@ -173,7 +201,11 @@ loadCandidatesAndVotes: async function() {
      sum += Number(count);
      }
 	 if (tmp <= sum){
-		 this.voteEnd();
+		 await voteEnd(nowpage,0,0,0);
+		 //alert("??");
+		 if(document.location.href.includes("vote1.html")){
+			this.voteEnd();
+		 }
 	 }
      
  },

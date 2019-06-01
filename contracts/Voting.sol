@@ -14,18 +14,18 @@ contract Voting {
     bool exists;
 	mapping (address => uint8) voted;
 	uint8 maxVotes;
-	bool end;
+	uint8 end;
   }
 
   mapping (uint8 => voteRoom) voteRoomList;
   uint8 public roomCount = 1;
   
-  function isVoteEnd(uint8 roomNumber, uint8 xx, uint8 yy, uint8 zz) view public returns (bool) {
+  function isVoteEnd(uint8 roomNumber, uint8 xx, uint8 yy, uint8 zz) view public returns (uint8) {
 	 return voteRoomList[roomNumber].end;
   }
   
   function voteEnd(uint8 roomNumber, uint8 xx, uint8 yy, uint8 zz) public {
-	 voteRoomList[roomNumber].end = true;
+	 voteRoomList[roomNumber].end = 1;
   }
 
   function maxCheck(uint8 roomNumber, uint8 xx, uint8 yy, uint8 zz, uint8 aa) view public returns (uint8) {
